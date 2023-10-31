@@ -72,6 +72,17 @@ app.post('/login', (req, res) => {
     })
 })
 
+app.get('/content', (req, res)=> {
+    pool.query('SELECT * FROM content', (err, result) => {
+        if(err){
+            console.error(err.message);
+            res.status(500).json({ message : 'post/login에서 오류 발생'});
+        } else {
+            res.status(200).json({result})
+        }
+    })
+})
+
 
 app.listen(port, () => {
     console.log(`Example app listeing on port ${port}`)
