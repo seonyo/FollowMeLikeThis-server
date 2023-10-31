@@ -37,15 +37,27 @@ app.get('/user', (req, res) => {
 });
 
 app.get('/user/:id', (req, res) => {
-    let id = req.params;
+    let {id} = req.params;
     pool.query('SELECT * FROM user WHERE id = ?', id, (err, result) => {
         if (err) {
             console.error(err.message);
-            res.status(500).json({ message: 'get/user에서 오류 발생' });
+            res.status(500).json({ message: 'get/user/id에서 오류 발생' });
         } else {
             res.status(200).json(result);
         }
     })
+})
+
+app.post('/user', (req, res) => {
+    let {user_id, user_pw, user_name} = req.body;
+    pool.query('INSERT INTO user (user_id, user_pw, user_name) VALUES (?,?,?)', [user_id, user_name, user_pw], (err, result => {
+        if(err){
+            console.error(err.message);
+            res.status(500).json({ message : 'post/user에서 오류 발생'});
+        } else {
+            res.status(200).json({result})
+        }
+    }))
 })
 
 
