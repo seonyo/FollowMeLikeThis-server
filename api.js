@@ -50,14 +50,21 @@ app.get('/user/:id', (req, res) => {
 
 app.post('/user', (req, res) => {
     let { user_id, user_pw, user_name } = req.body;
-    pool.query('INSERT INTO user (user_id, user_pw, user_name) VALUES (?,?,?)', [user_id, user_name, user_pw], (err, result => {
-        if (err) {
-            console.error(err.message);
-            res.status(500).json({ message: 'post/user에서 오류 발생' });
-        } else {
-            res.status(200).json({ result })
+    pool.query('SELECT * from user where user_id = ?', user_id, (err, result) => {
+        if(result.length > 0){
+            res.status(400).json({result : "중복된 아이디 값이 있습니다"})
         }
-    }))
+        else {
+            pool.query('INSERT INTO user (user_id, user_pw, user_name) VALUES (?,?,?)', [user_id, user_name, user_pw], (err, result => {
+                if (err) {
+                    console.error(err.message);
+                    res.status(500).json({ message: 'post/user에서 오류 발생' });
+                } else {
+                    res.status(200).json({ result })
+                }
+            }))
+        }
+    })
 })
 
 app.post('/login', (req, res) => {
