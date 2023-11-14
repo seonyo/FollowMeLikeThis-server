@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const mysql = require('mysql2')
@@ -8,11 +9,14 @@ const port = 3000
 app.use(express.json());
 app.use(cors());
 
+
+console.log(process.env.DB_HOST);
+
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '990327',
-    database: 'follow_me_like_this'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
 })
 
 //db 연결 여부
