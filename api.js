@@ -4,19 +4,17 @@ const cors = require('cors')
 const mysql = require('mysql2')
 const app = express()
 
-const port = 3000
+const port = 3001
 
 app.use(express.json());
 app.use(cors());
-
-
-console.log(process.env.DB_HOST);
 
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE
+    database: process.env.DB_DATABASE,
+    port : 3306
 })
 
 //db 연결 여부
