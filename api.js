@@ -113,7 +113,8 @@ app.get('/content/:id', (req, res) => {
 
 app.post('/content', (req, res) => {
     let { user_name, content_name, content_number } = req.body;
-    pool.query('INSERT INTO content (user_name, date, content_name, content_number) VALUES (?,DATE_FORMAT(NOW(), "%Y-%m-%d"),?,?)',
+    console.log("Received data:", req.body);
+    pool.query('INSERT INTO content (user_name, date, content_name, content_number) VALUES (?, NOW(),?,?)',
         [user_name, content_name, content_number],
         (err, result) => {
             if (err) {
