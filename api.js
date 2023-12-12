@@ -9,12 +9,20 @@ const port = 3001
 app.use(express.json());
 app.use(cors());
 
+// const pool = mysql.createPool({
+//     host: process.env.DB_HOST,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_DATABASE,
+//     port: 3306
+// })
+
 const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    port : 3306
+    host: 'localhost',
+    user: 'root',
+    password: '990327',
+    database: 'follow_me_like_this',
+    port: 3306
 })
 
 //db 연결 여부
@@ -71,7 +79,7 @@ app.post('/user', (req, res) => {
 
 app.post('/login', (req, res) => {
     let { user_id, user_pw } = req.body;
-    pool.query ('SELECT * FROM user WHERE user_id = ? AND user_pw = ?', [user_id, user_pw], (err, result) => {
+    pool.query('SELECT * FROM user WHERE user_id = ? AND user_pw = ?', [user_id, user_pw], (err, result) => {
         if (result.length === 1) {
             pool.query('SELECT * FROM user WHERE user_id = ?', [user_id], (err, result) => {
                 if (err) {
@@ -83,7 +91,7 @@ app.post('/login', (req, res) => {
             })
         }
         else {
-            res.status(404).json({message : '아이디 혹은 회원가입이 일치하지 않습니다'})
+            res.status(404).json({ message: '아이디 혹은 회원가입이 일치하지 않습니다' })
         }
     })
 })
@@ -114,7 +122,7 @@ app.get('/content/:id', (req, res) => {
 app.post('/content', (req, res) => {
     let { user_name, content_name, content_number } = req.body;
     console.log("Received data:", req.body);
-    pool.query('INSERT INTO content (user_name, date, content_name, content_number) VALUES (?, NOW(),?,?)',
+    pool.query('INSERT INTO content (user_name, date, content_name, content_number) VALUES (?, DATE_FORMAT(NOW(), "%Y-%m-%d"),?,?)',
         [user_name, content_name, content_number],
         (err, result) => {
             if (err) {
